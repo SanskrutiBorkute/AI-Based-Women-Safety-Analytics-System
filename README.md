@@ -84,6 +84,6 @@ This project provides a smart and efficient solution for women’s safety using 
 
 ## References
 
-[1] Research Papers on Women Safety Systems
-[2] AI and GPS Tracking Studies
-[3] https://who.int
+- [1] Research Papers on Women Safety Systems
+- [2] AI and GPS Tracking Studies
+- [3] https://who.int
