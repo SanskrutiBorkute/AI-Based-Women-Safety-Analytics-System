@@ -1,8 +1,12 @@
 # Project Title
 # 🛡️ AI-Based Women Safety Analytics System
 
-**Author(s):** Sanskruti Borkute
-**Affiliation:** Suryodaya college / Rtmnu
+### Author
+Sanskruti Borkute
+---
+### Affiliation
+Suryodaya college / Rtmnu
+---
 **Date:** 27/03/2026
 
 ---
