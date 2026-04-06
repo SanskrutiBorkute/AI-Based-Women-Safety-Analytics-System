@@ -2,12 +2,15 @@
 # AI-Based Women Safety Analytics System
 
 ### Author
+---
 Sanskruti Borkute
 ---
 ### Affiliation
+---
 Suryodaya college / Rtmnu
 ---
 ### Date:
+---
 March 2026
 
 ---
