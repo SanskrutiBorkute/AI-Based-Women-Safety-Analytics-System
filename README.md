@@ -1,5 +1,5 @@
 # Project Title
-# 🛡️ AI-Based Women Safety Analytics System
+# AI-Based Women Safety Analytics System
 
 ### Author
 Sanskruti Borkute
