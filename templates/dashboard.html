@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Women Safety System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+          <link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>🛡 SafeHer</h2>
+
+    <ul>
+        <li>🏠 Dashboard</li>
+        <li>📍 Live Tracking</li>
+        <li>🚨 SOS Alert</li>
+        <li>👥 Nearby Users</li>
+        <li>🔥 Heatmap</li>
+        <li>🛣 Safe Route</li>
+        <li>📞 Fake Call</li>
+        <li>🎤 Voice SOS</li>
+    </ul>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <h1>Smart Women Safety System</h1>
+        <p>Stay Safe. Stay Connected.</p>
+    </div>
+
+    <div id="zone-banner" class="zone-banner safe-banner">
+
+    🟢 SAFE ZONE
+
+</div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Safety Status</h3>
+            <p id="safety-status">Checking...</p>
+        </div>
+
+        <div class="card">
+            <h3>Current Location</h3>
+            <p id="location-text">Detecting...</p>
+        </div>
+
+        <div class="card">
+            <h3>Current Time</h3>
+            <p id="live-time">Loading...</p>
+        </div>
+
+        <div class="card">
+            <h3>Emergency Contacts</h3>
+            <p>3 Registered</p>
+        </div>
+
+    </div>
+
+    <div class="sos-panel">
+
+        <div>
+            <h2>🚨 Emergency Assistance</h2>
+            <p>
+                Send your live location and alert trusted contacts instantly.
+            </p>
+        </div>
+
+        <button class="sos-btn" onclick="sendSOS()">
+    SEND SOS
+</button>
+
+    </div>
+
+    <div class="contacts-section">
+
+    <h2>👨‍👩‍👧 Trusted Contacts</h2>
+
+    <div class="contacts-grid">
+
+        <div class="contact-card">
+            👩 Mother
+            <br>
+            9876543210
+        </div>
+
+        <div class="contact-card">
+            👨 Father
+            <br>
+            9876543211
+        </div>
+
+        <div class="contact-card">
+            👭 Best Friend
+            <br>
+            9876543212
+        </div>
+
+    </div>
+
+</div>
+
+<div class="nearby-section">
+
+    <h2>👥 Nearby Support Network</h2>
+
+    <div class="nearby-grid">
+
+        <div class="nearby-card">
+            👩 Priya
+            <br>
+            200 m away
+        </div>
+
+        <div class="nearby-card">
+            👨 Rahul
+            <br>
+            350 m away
+        </div>
+
+        <div class="nearby-card">
+            👩 Neha
+            <br>
+            500 m away
+        </div>
+
+    </div>
+
+</div>
+
+<div class="heatmap-section">
+
+    <h2>🔥 Unsafe Zones Nearby</h2>
+
+    <div class="heatmap-grid">
+
+        <div class="heat-card danger">
+            Sitabuldi
+            <br>
+            High Risk
+        </div>
+
+        <div class="heat-card warning">
+            Railway Station
+            <br>
+            Medium Risk
+        </div>
+
+        <div class="heat-card danger">
+            Bus Stand
+            <br>
+            High Risk
+        </div>
+
+    </div>
+
+</div>
+
+<div class="route-section">
+
+    <h2>🛣 Safe Route Recommendation</h2>
+
+    <div class="route-card">
+
+        <h3>Home ➜ College</h3>
+
+        <p>Safety Score: 92%</p>
+
+        <p>Estimated Time: 15 Minutes</p>
+
+        <button class="route-btn">
+            Show Safe Route
+        </button>
+
+    </div>
+
+</div>
+
+<div class="voice-section">
+
+    <h2>🎤 Voice SOS</h2>
+
+    <p>
+        Say <b>HELP ME</b> to trigger an emergency alert.
+    </p>
+
+    <button class="voice-btn" onclick="startVoiceSOS()">
+        Start Listening
+    </button>
+
+    <p id="voice-status">
+        Status: Waiting...
+    </p>
+
+</div>
+
+    <div class="map-box">
+    <h2>📍 Live Location Map</h2>
+
+    <div id="map"></div>
+</div>
+
+<div class="auto-sos-section">
+
+    <h2>🚨 Auto SOS Monitoring</h2>
+
+    <div class="auto-sos-card">
+
+        <p><b>Status:</b> Active</p>
+
+        <p id="zone-status">
+            Current Zone: Safe
+        </p>
+
+    </div>
+
+</div>
+
+<div class="history-section">
+
+    <h2>📋 Recent Activity</h2>
+
+    <div class="history-card">
+        <p>🟢 System Started Successfully</p>
+        <span>Just Now</span>
+    </div>
+
+    <div class="history-card">
+        <p>📍 Location Updated</p>
+        <span>1 Minute Ago</span>
+    </div>
+
+    <div class="history-card">
+        <p>👥 Nearby Users Detected</p>
+        <span>2 Minutes Ago</span>
+    </div>
+
+    <div class="history-card">
+        <p>🛣 Safe Route Generated</p>
+        <span>5 Minutes Ago</span>
+    </div>
+
+</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+<div id="sos-modal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>🚨 SOS Activated</h2>
+
+        <p>
+            Emergency alert sent successfully.
+        </p>
+
+        <ul>
+            <li>✅ Location Shared</li>
+            <li>✅ Mother Notified</li>
+            <li>✅ Father Notified</li>
+            <li>✅ Best Friend Notified</li>
+        </ul>
+
+        <button onclick="closeSOS()">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
