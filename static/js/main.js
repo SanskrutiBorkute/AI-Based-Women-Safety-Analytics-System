@@ -622,7 +622,7 @@ function startVoiceSOS(){
 
 }
 
-function addContact(){
+
 
     const name =
         document.getElementById("contact-name").value;
@@ -659,12 +659,13 @@ addActivity("👤 Trusted Contact Added");
 
     document.getElementById(
         "contact-name"
-    ).value = "";
+    ).value = "";function addContact(){
 
     document.getElementById(
         "contact-phone"
     ).value = "";
 
+    updateContactCount();
 }
 
 function loadContacts(){
@@ -713,6 +714,23 @@ window.addEventListener(
     "load",
     loadContacts
 );
+
+function updateContactCount(){
+
+    const count =
+        document.querySelectorAll(".contact-card").length;
+
+    const contactCount =
+        document.getElementById("contact-count");
+
+    if(contactCount){
+
+        contactCount.innerHTML =
+            count + " Registered";
+
+    }
+
+}
 
 function showSafeRoute(){
 
