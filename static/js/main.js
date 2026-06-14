@@ -622,8 +622,7 @@ function startVoiceSOS(){
 
 }
 
-
-
+     function addContact(){
     const name =
         document.getElementById("contact-name").value;
 
@@ -659,7 +658,7 @@ addActivity("👤 Trusted Contact Added");
 
     document.getElementById(
         "contact-name"
-    ).value = "";function addContact(){
+    ).value = "";
 
     document.getElementById(
         "contact-phone"
