@@ -18,21 +18,20 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <h2>🛡 SafeHer</h2>
 
     <ul>
-        <li>🏠 Dashboard</li>
-        <li>📍 Live Tracking</li>
-        <li>🚨 SOS Alert</li>
-        <li>👥 Nearby Users</li>
-        <li>🔥 Heatmap</li>
-        <li>🛣 Safe Route</li>
-        <li>📞 Fake Call</li>
-        <li>🎤 Voice SOS</li>
-    </ul>
+    <li><a href="#dashboard">🏠 Dashboard</a></li>
+    <li><a href="#live-tracking">📍 Live Tracking</a></li>
+    <li><a href="#sos-alert">🚨 SOS Alert</a></li>
+    <li><a href="#nearby-users">👥 Nearby Users</a></li>
+    <li><a href="#heatmap">🔥 Heatmap</a></li>
+    <li><a href="#safe-route">🛣 Safe Route</a></li>
+    <li><a href="#voice-sos">🎤 Voice SOS</a></li>
+</ul>
 
 </div>
 
 <div class="main-content">
 
-    <div class="topbar">
+    <div class="topbar" id="dashboard">
         <h1>Smart Women Safety System</h1>
         <p>Stay Safe. Stay Connected.</p>
     </div>
@@ -65,9 +64,49 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
             <p>3 Registered</p>
         </div>
 
+     <div class="card">
+    <h3>AI Safety Score</h3>
+    <p id="ai-score">Loading...</p>
+    <small id="risk-level"></small>
+    <br>
+    <small id="confidence-score"></small>
+</div>
+</div>
+
+
+<div class="map-box" id="live-tracking">
+    <h2>📍 Live Location Map</h2>
+
+    <div id="map"></div>
+</div>
+
+
+<div class="ai-row">
+
+    <div class="card">
+
+        <h3>AI Prediction History</h3>
+
+        <div id="prediction-history">
+            Loading...
+        </div>
+
     </div>
 
-    <div class="sos-panel">
+    <div class="card">
+
+        <h3>🤖 AI Recommendation</h3>
+
+        <p id="ai-recommendation">
+            Loading recommendation...
+        </p>
+
+    </div>
+
+</div>
+<br>
+
+    <div class="sos-panel" id="sos-alert">
 
         <div>
             <h2>🚨 Emergency Assistance</h2>
@@ -82,111 +121,112 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     </div>
 
-    <div class="contacts-section">
+    <div class="dashboard-grid">
+     <div class="contacts-section">
 
     <h2>👨‍👩‍👧 Trusted Contacts</h2>
 
-    <div class="contacts-grid">
+    <input
+    type="text"
+    id="contact-name"
+    placeholder="Contact Name">
 
-        <div class="contact-card">
-            👩 Mother
-            <br>
-            9876543210
-        </div>
+<input
+    type="text"
+    id="contact-phone"
+    placeholder="Phone Number">
 
-        <div class="contact-card">
-            👨 Father
-            <br>
-            9876543211
-        </div>
+<button onclick="addContact()">
+    Add Contact
+</button>
 
-        <div class="contact-card">
-            👭 Best Friend
-            <br>
-            9876543212
-        </div>
-
-    </div>
+<div class="contacts-grid" id="contacts-grid">
 
 </div>
 
-<div class="nearby-section">
+</div>
+
+<div class="nearby-section" id="nearby-users">
 
     <h2>👥 Nearby Support Network</h2>
 
-    <div class="nearby-grid">
+   <div class="nearby-grid" id="nearby-grid">
 
-        <div class="nearby-card">
-            👩 Priya
-            <br>
-            200 m away
-        </div>
+</div>
 
-        <div class="nearby-card">
-            👨 Rahul
-            <br>
-            350 m away
-        </div>
+</div>
 
-        <div class="nearby-card">
-            👩 Neha
-            <br>
-            500 m away
-        </div>
+<div class="heatmap-section" id="heatmap">
+
+    <h2>🔥 AI Risk Analysis</h2>
+
+    <div class="heat-card" id="risk-analysis">
+
+        <p>
+    <b>📍 Location:</b>
+    <span id="risk-location">
+        Detecting...
+    </span>
+</p>
+
+        <p><b>🕒 Time:</b> <span id="risk-time">Loading...</span></p>
+
+        <p>
+    <b>👥 Crowd Density:</b>
+    <span id="crowd-level">Loading...</span>
+    &nbsp;&nbsp;&nbsp;
+    <b>⚠ Risk:</b>
+    <span id="zone-risk">Loading...</span>
+</p>
+
+        <p>
+    <b>🤖 AI Insight:</b>
+    <span id="ai-insight">
+        Loading...
+    </span>
+</p>
 
     </div>
 
 </div>
 
-<div class="heatmap-section">
-
-    <h2>🔥 Unsafe Zones Nearby</h2>
-
-    <div class="heatmap-grid">
-
-        <div class="heat-card danger">
-            Sitabuldi
-            <br>
-            High Risk
-        </div>
-
-        <div class="heat-card warning">
-            Railway Station
-            <br>
-            Medium Risk
-        </div>
-
-        <div class="heat-card danger">
-            Bus Stand
-            <br>
-            High Risk
-        </div>
-
-    </div>
-
-</div>
-
-<div class="route-section">
+<div class="route-section" id="safe-route">
 
     <h2>🛣 Safe Route Recommendation</h2>
 
     <div class="route-card">
 
-        <h3>Home ➜ College</h3>
+        <p><b>Current Location:</b></p>
 
-        <p>Safety Score: 92%</p>
+<p id="route-location">
+Detecting...
+</p>
 
-        <p>Estimated Time: 15 Minutes</p>
+<p><b>Recommended Path:</b></p>
 
-        <button class="route-btn">
-            Show Safe Route
-        </button>
+<p id="route-suggestion">
+Analyzing safest route...
+</p>
+
+<p><b>AI Safety Score:</b></p>
+
+<p id="route-score">
+Loading...
+</p>
+
+        <button
+    class="route-btn"
+    onclick="showSafeRoute()">
+
+    Show Safe Route
+
+</button>
 
     </div>
 
 </div>
 
-<div class="voice-section">
+<div class="voice-section" id="voice-sos">
 
     <h2>🎤 Voice SOS</h2>
 
@@ -203,12 +243,8 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     </p>
 
 </div>
-
-    <div class="map-box">
-    <h2>📍 Live Location Map</h2>
-
-    <div id="map"></div>
 </div>
+
 
 <div class="auto-sos-section">
 
@@ -230,28 +266,17 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <h2>📋 Recent Activity</h2>
 
+<div id="activity-log">
+
     <div class="history-card">
-        <p>🟢 System Started Successfully</p>
+        <p>🟢 System Started</p>
         <span>Just Now</span>
     </div>
 
-    <div class="history-card">
-        <p>📍 Location Updated</p>
-        <span>1 Minute Ago</span>
-    </div>
-
-    <div class="history-card">
-        <p>👥 Nearby Users Detected</p>
-        <span>2 Minutes Ago</span>
-    </div>
-
-    <div class="history-card">
-        <p>🛣 Safe Route Generated</p>
-        <span>5 Minutes Ago</span>
-    </div>
+</div>
 
 </div>
-</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -268,12 +293,9 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
             Emergency alert sent successfully.
         </p>
 
-        <ul>
-            <li>✅ Location Shared</li>
-            <li>✅ Mother Notified</li>
-            <li>✅ Father Notified</li>
-            <li>✅ Best Friend Notified</li>
-        </ul>
+        <ul id="sos-contact-list">
+
+</ul>
 
         <button onclick="closeSOS()">
             Close

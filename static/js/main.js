@@ -28,6 +28,48 @@ window.onload = function() {
 
                 }
 
+                addActivity("📍 Location Updated");
+
+                const riskLocation =
+    document.getElementById("risk-location");
+
+if(riskLocation){
+
+    riskLocation.innerHTML =
+        lat.toFixed(4) + ", " + lng.toFixed(4);
+
+}
+
+                const routeLocation =
+    document.getElementById("route-location");
+
+const routeSuggestion =
+    document.getElementById("route-suggestion");
+
+const routeScore =
+    document.getElementById("route-score");
+
+if(routeLocation){
+
+    routeLocation.innerHTML =
+        lat.toFixed(4) + ", " + lng.toFixed(4);
+
+}
+
+if(routeSuggestion){
+
+    routeSuggestion.innerHTML =
+        "Prefer crowded roads and avoid isolated streets.";
+
+}
+
+if(routeScore){
+
+    routeScore.innerHTML =
+        "88% Safe";
+
+}
+
                 map.setView([lat, lng], 15);
 
                 L.marker([lat, lng])
@@ -56,6 +98,7 @@ window.onload = function() {
                 .addTo(map)
                 .bindPopup("🔥 High Risk Zone");
 
+
                 L.circle([lat - 0.004, lng - 0.003], {
                     color: 'orange',
                     fillColor: '#ffa500',
@@ -75,22 +118,6 @@ window.onload = function() {
                 })
                 .addTo(map)
                 .bindPopup("🛣 Recommended Safe Route");
-
-                setTimeout(function(){
-
-                    const zoneStatus =
-                        document.getElementById("zone-status");
-
-                    if(zoneStatus){
-
-                        zoneStatus.innerHTML =
-                            "Current Zone: 🔴 High Risk";
-
-                    }
-
-                    updateZoneTheme("danger");
-
-                },15000);
 
             },
 
@@ -125,6 +152,70 @@ window.onload = function() {
                 now.toLocaleTimeString();
 
         }
+
+        const riskTime =
+    document.getElementById("risk-time");
+
+const crowdLevel =
+    document.getElementById("crowd-level");
+
+const zoneRisk =
+    document.getElementById("zone-risk");
+
+const aiInsight =
+    document.getElementById("ai-insight");
+
+const hour =
+    now.getHours();
+
+if(riskTime){
+
+    riskTime.innerHTML =
+        now.toLocaleTimeString();
+
+}
+
+if(hour >= 6 && hour < 20){
+
+    if(crowdLevel)
+        crowdLevel.innerHTML = "High";
+
+    if(zoneRisk)
+        zoneRisk.innerHTML = "Medium";
+
+    if(aiInsight)
+        aiInsight.innerHTML =
+        "🤖 AI Insight: Crowded public area during daytime. Risk reduced due to active surroundings.";
+
+}
+
+else if(hour >= 20 && hour < 23){
+
+    if(crowdLevel)
+        crowdLevel.innerHTML = "Moderate";
+
+    if(zoneRisk)
+        zoneRisk.innerHTML = "Medium";
+
+    if(aiInsight)
+        aiInsight.innerHTML =
+        "🤖 AI Insight: Public activity decreasing. Stay alert and prefer well-lit routes.";
+
+}
+
+else{
+
+    if(crowdLevel)
+        crowdLevel.innerHTML = "Low";
+
+    if(zoneRisk)
+        zoneRisk.innerHTML = "High";
+
+    if(aiInsight)
+        aiInsight.innerHTML =
+        "🤖 AI Insight: Late-night hours with low public presence increase safety risk.";
+
+}
 
     }
 
@@ -170,6 +261,9 @@ window.onload = function() {
         const banner =
             document.getElementById("zone-banner");
 
+        const zoneStatus =
+    document.getElementById("zone-status");    
+
         body.classList.remove(
             "safe-zone",
             "medium-zone",
@@ -191,6 +285,12 @@ window.onload = function() {
             }
 
             updateSafetyStatus("safe");
+            if(zoneStatus){
+
+    zoneStatus.innerHTML =
+        "Current Zone: Safe";
+
+}
 
         }
 
@@ -210,6 +310,13 @@ window.onload = function() {
 
             updateSafetyStatus("medium");
 
+            if(zoneStatus){
+
+    zoneStatus.innerHTML =
+        "Current Zone: Medium Risk";
+
+}
+
         }
 
         else{
@@ -228,29 +335,181 @@ window.onload = function() {
 
             updateSafetyStatus("danger");
 
+            if(zoneStatus){
+
+    zoneStatus.innerHTML =
+        "Current Zone: High Risk";
+
+}
+
             sendSOS();
 
         }
 
     }
 
-    updateZoneTheme("safe");
+    fetch('/predict')
+    .then(response => response.json())
+    .then(data => {
 
-    setTimeout(function(){
+        const prediction = data.safety;
 
-        updateZoneTheme("medium");
+        const recommendation =
+    document.getElementById(
+        "ai-recommendation"
+    );
 
-    },5000);
+        const score = data.score;
 
-    setTimeout(function(){
+        const confidence =
+    data.confidence;
 
-        updateZoneTheme("danger");
+const aiScore =
+    document.getElementById("ai-score");
 
-    },10000);
+if(aiScore){
+
+    aiScore.innerHTML =
+        score + "%";
+
+}
+
+const riskLevel =
+    document.getElementById("risk-level");
+
+if(riskLevel){
+
+    if(score >= 80){
+
+        riskLevel.innerHTML =
+            "Risk Level: LOW";
+
+    }
+
+    else if(score >= 50){
+
+        riskLevel.innerHTML =
+            "Risk Level: MEDIUM";
+
+    }
+
+    else{
+
+        riskLevel.innerHTML =
+            "Risk Level: HIGH";
+
+    }
+
+}
+
+const confidenceElement =
+    document.getElementById("confidence-score");
+
+if(confidenceElement){
+
+    confidenceElement.innerHTML =
+        "Confidence: " + confidence + "%";
+
+}
+
+        if(prediction === "SAFE"){
+
+            if(recommendation){
+
+    recommendation.innerHTML =
+        "✅ Continue normal travel. Area appears safe.";
+
+}
+
+            addPredictionHistory(
+    "SAFE - " + score + "%"
+);
+
+            updateZoneTheme("safe");
+
+        }
+
+        else if(prediction === "MEDIUM"){
+
+            if(recommendation){
+
+    recommendation.innerHTML =
+        "⚠ Prefer crowded roads and keep contacts informed.";
+
+}
+
+            addPredictionHistory(
+    "MEDIUM - " + score + "%"
+);
+
+            updateZoneTheme("medium");
+
+        }
+
+        else{
+
+            if(recommendation){
+
+    recommendation.innerHTML =
+        "🚨 Avoid isolated areas. Keep SOS active.";
+
+}
+
+             addPredictionHistory(
+        "UNSAFE - " + score + "%"
+    );
+
+            updateZoneTheme("danger");
+
+            sendSOS();
+
+        }
+
+    })
+    .catch(error => {
+
+        console.log("AI Prediction Error:", error);
+
+        updateZoneTheme("safe");
+
+    });
 
 };
 
+function addPredictionHistory(message){
+
+    const history =
+        document.getElementById(
+            "prediction-history"
+        );
+
+    if(!history) return;
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "history-item";
+
+    const time =
+        new Date().toLocaleTimeString();
+
+    item.innerHTML =
+        time + " - " + message;
+
+    history.prepend(item);
+
+}
+
+let sosTriggered = false;
+
 function sendSOS(){
+
+    addActivity("🚨 SOS Activated");
+
+    if(sosTriggered) return;
+
+    sosTriggered = true;
 
     const modal =
         document.getElementById("sos-modal");
@@ -259,8 +518,29 @@ function sendSOS(){
 
         modal.style.display = "flex";
 
-    }
-    else{
+        const sosList =
+    document.getElementById("sos-contact-list");
+
+const contacts =
+    JSON.parse(
+        localStorage.getItem("contacts")
+    ) || [];
+
+if(sosList){
+
+    sosList.innerHTML =
+        "<li>✅ Current Location Shared</li>";
+
+    contacts.forEach(contact => {
+
+        sosList.innerHTML +=
+        `<li>✅ ${contact.name} Notified</li>`;
+
+    });
+
+}
+
+    } else {
 
         alert("🚨 SOS Alert Sent!");
 
@@ -308,28 +588,156 @@ function startVoiceSOS(){
 
     }
 
-    recognition.onresult = function(event){
+   recognition.onresult = function(event){
 
-        const speech =
-            event.results[0][0].transcript.toLowerCase();
+    const speech =
+        event.results[0][0].transcript.toLowerCase();
 
-        if(status){
+    console.log("Voice Detected:", speech);
 
-            status.innerHTML =
-                "Heard: " + speech;
+    const status =
+        document.getElementById("voice-status");
 
-        }
+    if(status){
 
-        if(
-            speech.includes("help me") ||
-            speech.includes("help") ||
-            speech.includes("emergency")
-        ){
+        status.innerHTML =
+            "🎤 Heard: " + speech;
 
-            sendSOS();
+    }
 
-        }
+    if(
+        speech.includes("help") ||
+        speech.includes("help me") ||
+        speech.includes("emergency") ||
+        speech.includes("sos")
+    ){
 
-    };
+        alert("🚨 Voice SOS Activated!");
+
+        sendSOS();
+
+    }
+
+};
+
+}
+
+function addContact(){
+
+    const name =
+        document.getElementById("contact-name").value;
+
+    const phone =
+        document.getElementById("contact-phone").value;
+
+    if(!name || !phone){
+
+        alert("Enter Name and Phone");
+
+        return;
+
+    }
+
+    const contacts =
+        JSON.parse(
+            localStorage.getItem("contacts")
+        ) || [];
+
+    contacts.push({
+        name:name,
+        phone:phone
+    });
+
+    localStorage.setItem(
+        "contacts",
+        JSON.stringify(contacts)
+    );
+
+    loadContacts();
+
+addActivity("👤 Trusted Contact Added");
+
+    document.getElementById(
+        "contact-name"
+    ).value = "";
+
+    document.getElementById(
+        "contact-phone"
+    ).value = "";
+
+}
+
+function loadContacts(){
+
+    const contacts =
+        JSON.parse(
+            localStorage.getItem("contacts")
+        ) || [];
+
+    const contactsGrid =
+        document.getElementById("contacts-grid");
+
+    const nearbyGrid =
+        document.getElementById("nearby-grid");
+
+    if(!contactsGrid || !nearbyGrid)
+        return;
+
+    contactsGrid.innerHTML = "";
+
+    nearbyGrid.innerHTML = "";
+
+    contacts.forEach(contact => {
+
+        contactsGrid.innerHTML += `
+            <div class="contact-card">
+                👤 ${contact.name}
+                <br>
+                ${contact.phone}
+            </div>
+        `;
+
+        nearbyGrid.innerHTML += `
+            <div class="nearby-card">
+                👤 ${contact.name}
+                <br>
+                Trusted Contact
+            </div>
+        `;
+
+    });
+
+}
+
+window.addEventListener(
+    "load",
+    loadContacts
+);
+
+function showSafeRoute(){
+
+    alert(
+        "🛣 Recommended Route:\n\nUse main roads with higher public activity and avoid isolated areas."
+    );
+
+}
+
+function addActivity(message){
+
+    const activityLog =
+        document.getElementById("activity-log");
+
+    if(!activityLog) return;
+
+    const now =
+        new Date().toLocaleTimeString();
+
+    activityLog.innerHTML =
+        `
+        <div class="history-card">
+            <p>${message}</p>
+            <span>${now}</span>
+        </div>
+        ` + activityLog.innerHTML;
 
 }
