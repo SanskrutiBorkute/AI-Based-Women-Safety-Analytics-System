@@ -3,312 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Women Safety System</title>
+    <title>SafeHer - AI Women Safety Analytics System</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-          <link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js Visualization CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 
 <body>
 
-<div class="sidebar">
-
-    <h2>🛡 SafeHer</h2>
-
-    <ul>
-    <li><a href="#dashboard">🏠 Dashboard</a></li>
-    <li><a href="#live-tracking">📍 Live Tracking</a></li>
-    <li><a href="#sos-alert">🚨 SOS Alert</a></li>
-    <li><a href="#nearby-users">👥 Nearby Users</a></li>
-    <li><a href="#heatmap">🔥 Heatmap</a></li>
-    <li><a href="#safe-route">🛣 Safe Route</a></li>
-    <li><a href="#voice-sos">🎤 Voice SOS</a></li>
-</ul>
-
-</div>
-
-<div class="main-content">
-
-    <div class="topbar" id="dashboard">
-        <h1>Smart Women Safety System</h1>
-        <p>Stay Safe. Stay Connected.</p>
+<!-- Sidebar navigation panel -->
+<nav class="sidebar" aria-label="Main Navigation">
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-shield-halved logo-icon" aria-hidden="true"></i>
+        <h2>SafeHer</h2>
     </div>
 
-    <div id="zone-banner" class="zone-banner safe-banner">
+    <ul class="sidebar-menu">
+        <li><a href="#dashboard" tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i> <span>Dashboard</span></a></li>
+        <li><a href="#live-tracking" tabindex="0"><i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i> <span>Live Tracking</span></a></li>
+        <li><a href="#sos-alert" tabindex="0"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> <span>SOS Alert</span></a></li>
+        <li><a href="#nearby-users" tabindex="0"><i class="fa-solid fa-users" aria-hidden="true"></i> <span>Nearby Users</span></a></li>
+        <li><a href="#heatmap" tabindex="0"><i class="fa-solid fa-fire" aria-hidden="true"></i> <span>Heatmap</span></a></li>
+        <li><a href="#safe-route" tabindex="0"><i class="fa-solid fa-route" aria-hidden="true"></i> <span>Safe Route</span></a></li>
+        <li><a href="#voice-sos" tabindex="0"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <span>Voice SOS</span></a></li>
+    </ul>
 
-    🟢 SAFE ZONE
-
-</div>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Safety Status</h3>
-            <p id="safety-status">Checking...</p>
+    <!-- Interactive settings gear trigger on sidebar footer -->
+    <div class="sidebar-footer" onclick="openSettings()" onkeypress="if(event.key === 'Enter') openSettings()" tabindex="0" style="cursor: pointer;" aria-label="Open safety settings modal">
+        <div class="user-profile">
+            <div class="avatar" aria-hidden="true"><i class="fa-solid fa-user"></i></div>
+            <div class="user-info">
+                <span class="user-name" id="sidebar-user-name">Safety Console</span>
+                <span class="user-status"><span class="pulse-dot" aria-hidden="true"></span> Protected</span>
+            </div>
+            <i class="fa-solid fa-gear" style="margin-left: auto; color: var(--text-muted); font-size: 14px;" aria-hidden="true"></i>
         </div>
-
-        <div class="card">
-            <h3>Current Location</h3>
-            <p id="location-text">Detecting...</p>
-        </div>
-
-        <div class="card">
-            <h3>Current Time</h3>
-            <p id="live-time">Loading...</p>
-        </div>
-
-        <div class="card">
-    <h3>Emergency Contacts</h3>
-    <p id="contact-count">0 Registered</p>
-</div>
-
-     <div class="card">
-    <h3>AI Safety Score</h3>
-    <p id="ai-score">Loading...</p>
-    <small id="risk-level"></small>
-    <br>
-    <small id="confidence-score"></small>
-</div>
-</div>
-
-
-<div class="map-box" id="live-tracking">
-    <h2>📍 Live Location Map</h2>
-
-    <div id="map"></div>
-</div>
-
-
-<div class="ai-row">
-
-    <div class="card">
-
-        <h3>AI Prediction History</h3>
-
-        <div id="prediction-history">
-            Loading...
-        </div>
-
     </div>
+</nav>
 
-    <div class="card">
+<!-- Main Workspace -->
+<main class="main-content" id="main-content-panel">
 
-        <h3>🤖 AI Recommendation</h3>
+    <header class="topbar" id="dashboard" aria-label="Header Status Panel">
+        <div class="topbar-left">
+            <h1>Smart Women Safety System</h1>
+            <p>Stay Safe. Stay Connected.</p>
+        </div>
+        <div class="topbar-right">
+            <!-- Notification bell component -->
+            <button class="notification-bell" id="bell-container" onclick="toggleNotifications(event)" aria-label="Toggle notifications dropdown menu" tabindex="0">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="badge" id="notification-count">0</span>
+                <div class="notification-dropdown" id="notification-dropdown" onclick="event.stopPropagation()" role="menu">
+                    <div class="notification-header">Safety Notifications</div>
+                    <div class="notification-list" id="notification-list" role="none">
+                        <div class="notification-item empty" role="menuitem">No new notifications</div>
+                    </div>
+                </div>
+            </button>
 
-        <p id="ai-recommendation">
-            Loading recommendation...
-        </p>
+            <div class="system-status-indicator">
+                <span class="status-label">Network Status</span>
+                <span class="status-badge"><span class="pulse-emerald" aria-hidden="true"></span> Connected</span>
+            </div>
+        </div>
+    </header>
 
-    </div>
+    <!-- Dynamic Alert Banner -->
+    <section class="banner-wrapper" aria-label="Safety Alert Banner">
+        <div id="zone-banner" class="zone-banner safe-banner" role="alert">
+            🟢 SAFE ZONE
+        </div>
+    </section>
 
-</div>
-<br>
+    <!-- Analytics Key Metrics Grid -->
+    <section class="cards" aria-label="Current Metrics Cards Grid">
 
-    <div class="sos-panel" id="sos-alert">
+        <div class="card card-stat" tabindex="0">
+            <div class="card-icon status-icon" aria-hidden="true"><i class="fa-solid fa-shield-heart"></i></div>
+            <div class="card-info">
+                <h3>Safety Status</h3>
+                <p id="safety-status" class="stat-value">Checking...</p>
+            </div>
+        </div>
 
-        <div>
-            <h2>🚨 Emergency Assistance</h2>
+        <div class="card card-stat" tabindex="0">
+            <div class="card-icon location-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="card-info">
+                <h3>Current Location</h3>
+                <p id="location-text" class="stat-value">Detecting...</p>
+            </div>
+        </div>
+
+        <div class="card card-stat" tabindex="0">
+            <div class="card-icon time-icon" aria-hidden="true"><i class="fa-solid fa-clock"></i></div>
+            <div class="card-info">
+                <h3>Current Time</h3>
+                <p id="live-time" class="stat-value">Loading...</p>
+            </div>
+        </div>
+
+        <div class="card card-stat" tabindex="0">
+            <div class="card-icon contacts-icon" aria-hidden="true"><i class="fa-solid fa-address-book"></i></div>
+            <div class="card-info">
+                <h3>Emergency Contacts</h3>
+                <p id="contact-count" class="stat-value">0 Registered</p>
+            </div>
+        </div>
+
+        <div class="card card-stat ai-score-card" tabindex="0">
+            <div class="card-icon ai-icon" aria-hidden="true"><i class="fa-solid fa-brain"></i></div>
+            <div class="card-info">
+                <h3>AI Safety Score</h3>
+                <div class="score-display">
+                    <p id="ai-score" class="stat-value">Loading...</p>
+                    <div class="progress-bar-bg" aria-hidden="true">
+                        <div id="ai-score-bar" class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="score-details">
+                    <small id="risk-level"></small>
+                    <small id="confidence-score"></small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Map Segment -->
+    <section class="map-box" id="live-tracking" aria-label="Safety Location Map">
+        <h2><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Live Location Map</h2>
+        <div id="map" tabindex="0" aria-label="Interactive leaflet safety map"></div>
+    </section>
+
+    <!-- Machine Learning Analytics Insights -->
+    <section class="ai-row" aria-label="AI Risk Insights Analysis">
+
+        <div class="card ai-history-card" tabindex="0">
+            <h3><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> AI Risk Trend Analytics</h3>
+            <!-- Line Chart container for safety timeline data -->
+            <div class="chart-container" style="position: relative; height: 160px; width: 100%; margin-bottom: 20px;" aria-label="Safety rating line graph display">
+                <canvas id="risk-chart"></canvas>
+            </div>
+            <div id="prediction-history" class="history-list" aria-label="Hourly risk logs timeline">
+                Loading...
+            </div>
+        </div>
+
+        <div class="card ai-recom-card" tabindex="0">
+            <h3><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> AI Recommendation</h3>
+            <div class="recommendation-content">
+                <p id="ai-recommendation">
+                    Loading recommendation...
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Emergency SOS Activation Panel -->
+    <section class="sos-panel" id="sos-alert" aria-label="Emergency SOS distress triggers">
+        <div class="sos-panel-left">
+            <h2><i class="fa-solid fa-triangle-exclamation alert-icon-pulse" aria-hidden="true"></i> Emergency Assistance</h2>
             <p>
                 Send your live location and alert trusted contacts instantly.
             </p>
         </div>
+        <div class="sos-btn-container">
+            <button class="sos-btn" onclick="sendSOS()" aria-label="Trigger SOS emergency coordinates text alerts" tabindex="0">
+                <span class="sos-text" id="sos-btn-text">SEND SOS</span>
+                <span class="sos-pulse-ring" aria-hidden="true"></span>
+                <span class="sos-pulse-ring-double" aria-hidden="true"></span>
+            </button>
+        </div>
+    </section>
 
-        <button class="sos-btn" onclick="sendSOS()">
-    SEND SOS
-</button>
-
-    </div>
-
+    <!-- Main Dashboard Interactive Sections -->
     <div class="dashboard-grid">
-     <div class="contacts-section">
+        
+        <!-- Trusted Contacts CRM -->
+        <section class="contacts-section card-dashboard" aria-label="Emergency Contacts Manager">
+            <h2><i class="fa-solid fa-user-shield" aria-hidden="true"></i> Trusted Contacts</h2>
+            
+            <div class="contact-inputs">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user input-icon" aria-hidden="true"></i>
+                    <input type="text" id="contact-name" placeholder="Contact Name" aria-label="Emergency contact name input" tabindex="0">
+                </div>
 
-    <h2>👨‍👩‍👧 Trusted Contacts</h2>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
+                    <input type="text" id="contact-phone" placeholder="Phone Number" aria-label="Emergency contact phone input" tabindex="0">
+                </div>
 
-    <input
-    type="text"
-    id="contact-name"
-    placeholder="Contact Name">
+                <button onclick="addContact()" class="btn-primary" aria-label="Save contact to SQL" tabindex="0">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i> Add Contact
+                </button>
+            </div>
 
-<input
-    type="text"
-    id="contact-phone"
-    placeholder="Phone Number">
+            <div class="contacts-grid" id="contacts-grid" aria-label="Registered trusted contacts grid"></div>
+        </section>
 
-<button onclick="addContact()">
-    Add Contact
-</button>
+        <!-- Support Network Feeds -->
+        <section class="nearby-section card-dashboard" id="nearby-users" aria-label="Emergency Support Network">
+            <h2><i class="fa-solid fa-users" aria-hidden="true"></i> Nearby Support Network</h2>
+            <div class="nearby-grid" id="nearby-grid" aria-label="OSM emergency stations grid"></div>
+        </section>
 
-<div class="contacts-grid" id="contacts-grid">
+        <!-- Heatmap Risk analysis details -->
+        <section class="heatmap-section card-dashboard" id="heatmap" aria-label="Heatmap Risk Analysis Details">
+            <h2><i class="fa-solid fa-shield-virus" aria-hidden="true"></i> AI Risk Analysis</h2>
+            <div class="heat-card" id="risk-analysis" tabindex="0">
+                <p>
+                    <i class="fa-solid fa-location-dot item-icon" aria-hidden="true"></i>
+                    <b>Location:</b>
+                    <span id="risk-location">Detecting...</span>
+                </p>
+                <p>
+                    <i class="fa-solid fa-clock item-icon" aria-hidden="true"></i>
+                    <b>Time:</b> 
+                    <span id="risk-time">Loading...</span>
+                </p>
+                <p>
+                    <i class="fa-solid fa-users-line item-icon" aria-hidden="true"></i>
+                    <b>Crowd Density:</b>
+                    <span id="crowd-level">Loading...</span>
+                </p>
+                <p>
+                    <i class="fa-solid fa-triangle-exclamation item-icon" aria-hidden="true"></i>
+                    <b>Risk:</b>
+                    <span id="zone-risk" class="risk-badge">Loading...</span>
+                </p>
+                <p class="ai-insight-line">
+                    <i class="fa-solid fa-robot item-icon" aria-hidden="true"></i>
+                    <b>AI Insight:</b>
+                    <span id="ai-insight">Loading...</span>
+                </p>
+            </div>
+        </section>
 
-</div>
+        <!-- Safe Path Recommendations -->
+        <section class="route-section card-dashboard" id="safe-route" aria-label="Safe Route Pathfinder">
+            <h2><i class="fa-solid fa-route" aria-hidden="true"></i> Safe Route Recommendation</h2>
+            <div class="route-card" tabindex="0">
+                <p><b>Current Location:</b></p>
+                <p id="route-location" class="route-val">Detecting...</p>
+                
+                <p><b>Destination:</b></p>
+                <p class="route-val" id="route-destination-text">Safe Haven / Nearest Police Station</p>
 
-</div>
+                <p><b>Recommended Path:</b></p>
+                <p id="route-suggestion" class="route-suggestion-text">Analyzing safest route...</p>
 
-<div class="nearby-section" id="nearby-users">
+                <div class="route-stats-grid">
+                    <div>
+                        <p><b>AI Safety Score:</b></p>
+                        <p id="route-score" class="route-val text-emerald">Loading...</p>
+                    </div>
+                    <div>
+                        <p><b>Est. Travel Time:</b></p>
+                        <p class="route-val" id="route-time-val">12 mins</p>
+                    </div>
+                    <div>
+                        <p><b>Route Status:</b></p>
+                        <span class="badge-optimal" id="route-status-badge">Optimal</span>
+                    </div>
+                </div>
 
-    <h2>👥 Nearby Support Network</h2>
+                <button class="route-btn btn-primary" onclick="showSafeRoute()" aria-label="Draw path to nearest beacon on map" tabindex="0">
+                    <i class="fa-solid fa-location-arrow" aria-hidden="true"></i> Show Safe Route
+                </button>
+            </div>
+        </section>
 
-   <div class="nearby-grid" id="nearby-grid">
+        <!-- Voice Activation Panel -->
+        <section class="voice-section card-dashboard" id="voice-sos" aria-label="Emergency Voice SOS Controller">
+            <h2><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> Voice SOS</h2>
+            <p class="voice-desc">
+                Say <b class="text-danger">"HELP ME"</b> to trigger an emergency alert.
+            </p>
+            
+            <div class="voice-btn-container">
+                <button class="voice-btn" onclick="startVoiceSOS()" aria-label="Start browser speech recognition" tabindex="0">
+                    <div class="mic-circle" aria-hidden="true">
+                        <i class="fa-solid fa-microphone"></i>
+                    </div>
+                    <span class="voice-btn-label">Start Listening</span>
+                    <span class="mic-pulse-ring" aria-hidden="true"></span>
+                </button>
+            </div>
 
-</div>
+            <p id="voice-status" class="voice-status-text">
+                Status: Waiting...
+            </p>
+        </section>
 
-</div>
+        <!-- Automated Safety Monitoring -->
+        <section class="auto-sos-section card-dashboard" aria-label="Auto SOS Monitoring Status">
+            <h2><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i> Auto SOS Monitoring</h2>
+            <div class="auto-sos-card" tabindex="0">
+                <div class="radar-status">
+                    <div class="radar-scanner" aria-hidden="true"></div>
+                    <div class="radar-info">
+                        <p class="status-indicator"><i class="fa-solid fa-circle-check text-emerald" aria-hidden="true"></i> Active Monitoring</p>
+                        <p id="zone-status">Current Zone: Safe</p>
+                    </div>
+                </div>
+                
+                <button class="btn-primary-outline" id="btn-session-report" onclick="exportSessionReport()" aria-label="Export PDF Session log reports" tabindex="0" style="margin-top: 20px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa-solid fa-file-invoice" aria-hidden="true"></i> Export Session Report
+                </button>
+            </div>
+        </section>
 
-<div class="heatmap-section" id="heatmap">
-
-    <h2>🔥 AI Risk Analysis</h2>
-
-    <div class="heat-card" id="risk-analysis">
-
-        <p>
-    <b>📍 Location:</b>
-    <span id="risk-location">
-        Detecting...
-    </span>
-</p>
-
-        <p><b>🕒 Time:</b> <span id="risk-time">Loading...</span></p>
-
-        <p>
-    <b>👥 Crowd Density:</b>
-    <span id="crowd-level">Loading...</span>
-    &nbsp;&nbsp;&nbsp;
-    <b>⚠ Risk:</b>
-    <span id="zone-risk">Loading...</span>
-</p>
-
-        <p>
-    <b>🤖 AI Insight:</b>
-    <span id="ai-insight">
-        Loading...
-    </span>
-</p>
+        <!-- Profile Statistics Section -->
+        <section class="auto-sos-section card-dashboard" aria-label="User Profile Statistics Analytics">
+            <h2><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> Profile Analytics</h2>
+            <div class="auto-sos-card" tabindex="0" style="background: rgba(255,255,255,0.01); border: 1px solid var(--card-border); padding: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="text-align: center; border-right: 1px solid var(--card-border); padding-right: 10px;">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Active Scans</span>
+                        <p id="stats-scans" style="font-size: 24px; font-weight: 800; margin: 5px 0 0 0; color: var(--primary);">0</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">SOS Broadcasts</span>
+                        <p id="stats-sos" style="font-size: 24px; font-weight: 800; margin: 5px 0 0 0; color: var(--danger);">0</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid var(--card-border); margin-top: 15px; padding-top: 15px;">
+                    <div style="text-align: center; border-right: 1px solid var(--card-border); padding-right: 10px;">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Police Nodes</span>
+                        <p id="stats-police" style="font-size: 24px; font-weight: 800; margin: 5px 0 0 0; color: var(--success);">0</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Hospitals Found</span>
+                        <p id="stats-hospitals" style="font-size: 24px; font-weight: 800; margin: 5px 0 0 0; color: #ec4899;">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
     </div>
 
-</div>
+    <!-- Timeline History Section -->
+    <section class="history-section card-dashboard" aria-label="Recent Safety Events Activity timeline">
+        <h2><i class="fa-solid fa-timeline" aria-hidden="true"></i> Recent Activity</h2>
+        
+        <div id="activity-log" class="timeline-container" aria-label="Dynamic session events log list">
+            <div class="history-card" tabindex="0">
+                <p>🟢 System Started</p>
+                <span>Just Now</span>
+            </div>
+        </div>
+    </section>
 
-<div class="route-section" id="safe-route">
+</main>
 
-    <h2>🛣 Safe Route Recommendation</h2>
-
-    <div class="route-card">
-
-        <p><b>Current Location:</b></p>
-
-<p id="route-location">
-Detecting...
-</p>
-
-<p><b>Recommended Path:</b></p>
-
-<p id="route-suggestion">
-Analyzing safest route...
-</p>
-
-<p><b>AI Safety Score:</b></p>
-
-<p id="route-score">
-Loading...
-</p>
-
-        <button
-    class="route-btn"
-    onclick="showSafeRoute()">
-
-    Show Safe Route
-
-</button>
-
-    </div>
-
-</div>
-
-<div class="voice-section" id="voice-sos">
-
-    <h2>🎤 Voice SOS</h2>
-
-    <p>
-        Say <b>HELP ME</b> to trigger an emergency alert.
-    </p>
-
-    <button class="voice-btn" onclick="startVoiceSOS()">
-        Start Listening
-    </button>
-
-    <p id="voice-status">
-        Status: Waiting...
-    </p>
-
-</div>
-</div>
-
-
-<div class="auto-sos-section">
-
-    <h2>🚨 Auto SOS Monitoring</h2>
-
-    <div class="auto-sos-card">
-
-        <p><b>Status:</b> Active</p>
-
-        <p id="zone-status">
-            Current Zone: Safe
-        </p>
-
-    </div>
-
-</div>
-
-<div class="history-section">
-
-    <h2>📋 Recent Activity</h2>
-
-<div id="activity-log">
-
-    <div class="history-card">
-        <p>🟢 System Started</p>
-        <span>Just Now</span>
-    </div>
-
-</div>
-
-</div>
-
-
+<!-- Leaflet Map Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-
-<div id="sos-modal" class="modal">
-
+<!-- Emergency Modal Panel -->
+<div id="sos-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sos-title">
     <div class="modal-content">
-
-        <h2>🚨 SOS Activated</h2>
-
-        <p>
+        <div class="modal-header">
+            <i class="fa-solid fa-circle-exclamation modal-alert-icon" aria-hidden="true"></i>
+            <h2 id="modal-sos-title">SOS Activated</h2>
+        </div>
+        <p class="modal-desc">
             Emergency alert sent successfully.
         </p>
-
-        <ul id="sos-contact-list">
-
-</ul>
-
-        <button onclick="closeSOS()">
-            Close
+        <ul id="sos-contact-list" aria-label="Contacts notified by text alert"></ul>
+        <button onclick="closeSOS()" class="btn-modal-close" aria-label="Dismiss SOS state indicators" tabindex="0">
+            Dismiss Alert
         </button>
-
     </div>
-
 </div>
+
+<!-- User Settings Modal -->
+<div id="settings-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-settings-title">
+    <div class="modal-content" style="max-width: 500px; text-align: left;">
+        <div class="modal-header" style="flex-direction: row; justify-content: space-between; width: 100%; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; margin-bottom: 15px;">
+            <h2 id="modal-settings-title" style="margin: 0; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-gears" style="color: var(--primary)" aria-hidden="true"></i> Safety Settings</h2>
+            <i class="fa-solid fa-xmark" onclick="closeSettings()" style="cursor: pointer; font-size: 20px; color: var(--text-muted);" aria-label="Close settings modal" tabindex="0" role="button"></i>
+        </div>
+        
+        <form id="settings-form" onsubmit="saveSettings(event)" style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="font-weight: 700; font-size: 13px; color: var(--primary); text-transform: uppercase;">User Profile Info</div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group">
+                    <label for="profile-name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon" aria-hidden="true"></i>
+                        <input type="text" id="profile-name" required placeholder="Full Name" style="width: 100%; padding-left: 36px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; color: white;" tabindex="0">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="profile-phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone input-icon" aria-hidden="true"></i>
+                        <input type="text" id="profile-phone" required placeholder="10 Digits" style="width: 100%; padding-left: 36px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 8px; color: white;" tabindex="0">
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-weight: 700; font-size: 13px; color: var(--primary); text-transform: uppercase; margin-top: 10px;">Safety Toggles</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 600; font-size: 14px;">Auto SOS Monitoring</span>
+                        <p style="margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted);">Alert instantly when danger is predicted.</p>
+                    </div>
+                    <label class="switch" aria-label="Toggle Auto SOS">
+                        <input type="checkbox" id="setting-auto-sos" tabindex="0">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 600; font-size: 14px;">Voice SOS Listening</span>
+                        <p style="margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted);">Triggers alerts on 'HELP ME' voice commands.</p>
+                    </div>
+                    <label class="switch" aria-label="Toggle Voice SOS">
+                        <input type="checkbox" id="setting-voice-sos" tabindex="0">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 600; font-size: 14px;">Push Notifications</span>
+                        <p style="margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted);">Show warning notifications.</p>
+                    </div>
+                    <label class="switch" aria-label="Toggle Notifications">
+                        <input type="checkbox" id="setting-notifications" tabindex="0">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 600; font-size: 14px;">Dark Theme Filter</span>
+                        <p style="margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted);">Apply high-contrast dark maps tile filter.</p>
+                    </div>
+                    <label class="switch" aria-label="Toggle Dark Mode Filter">
+                        <input type="checkbox" id="setting-dark-mode" onchange="toggleDarkModeFilter(this.checked)" tabindex="0">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px;">
+                <div class="input-group">
+                    <label for="setting-language">System Language</label>
+                    <select id="setting-language" style="width: 100%; padding: 10px; background: #0d111b; border: 1px solid var(--card-border); border-radius: 8px; color: white;" tabindex="0" aria-label="Select System Language">
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi / हिंदी</option>
+                        <option value="Marathi">Marathi / मराठी</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="submit" class="btn-primary" style="flex: 1; justify-content: center;" tabindex="0">Save Settings</button>
+                <button type="button" onclick="location.href='/logout'" class="btn-primary-outline" style="border-color: var(--danger); color: var(--danger);" tabindex="0">Logout</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Floating AI Chatbot Assistant -->
+<aside class="chatbot-widget collapsed" id="chatbot-container" aria-label="AI Chat Assistant Widget">
+    <div class="chatbot-header" onclick="toggleChat()" tabindex="0" onkeypress="if(event.key === 'Enter') toggleChat()" aria-label="Expand Chat Assistant dialog panel">
+        <i class="fa-solid fa-robot" aria-hidden="true"></i>
+        <span>AI Safety Assistant</span>
+        <i class="fa-solid fa-chevron-up toggle-chat-icon" id="chat-toggle-icon" aria-hidden="true"></i>
+    </div>
+    <div class="chatbot-body" id="chatbot-body">
+        <div class="chat-messages" id="chat-messages" aria-live="polite">
+            <div class="chat-message bot">
+                Hello! I am your AI Safety Assistant. Ask me anything about safety routes, emergency contacts, or nearby help nodes.
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a safety question..." onkeypress="handleChatKey(event)" aria-label="Type message query to chatbot" tabindex="0">
+            <button onclick="sendChatMessage()" aria-label="Send message bubble" tabindex="0"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+        </div>
+    </div>
+</aside>
 
 </body>
 </html>
-
-
-
-
-

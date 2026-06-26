@@ -25,4 +25,4 @@ joblib.dump(
     "models/safety_model.pkl"
 )
 
-print("✅ AI Safety Model Trained Successfully")
+print("AI Safety Model Trained Successfully")

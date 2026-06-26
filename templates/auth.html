@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeHer - Secure Access Portal</title>
+    
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #090c15;
+            background-image: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, #090c15 100%);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .auth-card {
+            background: rgba(22, 29, 49, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 45px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(16px);
+            text-align: center;
+            animation: cardSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes cardSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo i {
+            font-size: 28px;
+            color: #6366f1;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.6));
+        }
+
+        .auth-logo h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .auth-tab.active {
+            background: #6366f1;
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .auth-form {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .auth-form.active {
+            display: flex;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .auth-input-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .auth-input-wrapper input:focus {
+            border-color: #6366f1;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-auth-submit {
+            width: 100%;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-auth-submit:hover {
+            background: #4f46e5;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .flash-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>SafeHer Portal</h2>
+        </div>
+
+        <!-- Flask Flash Error Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for msg in messages %}
+            <div class="flash-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ msg }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Secure Login Form -->
+        <form id="login-form" class="auth-form active" action="/login" method="POST">
+            <div class="input-group">
+                <label for="login-email">Email Address</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="login-email" name="email" required placeholder="name@domain.com">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">
+                <i class="fa-solid fa-right-to-bracket"></i> Sign In
+            </button>
+        </form>
+
+        <!-- Secure Registration Form -->
+        <form id="register-form" class="auth-form" action="/register" method="POST">
+            <div class="input-group">
+                <label for="reg-name">Full Name</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="reg-name" name="name" required placeholder="Jane Doe">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="reg-email">Email Address</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="reg-email" name="email" required placeholder="name@domain.com">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="reg-phone">Phone Number</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="text" id="reg-phone" name="phone" required placeholder="9876543210">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="reg-password">Password</label>
+                <div class="auth-input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="reg-password" name="password" required placeholder="Create Secure Password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">
+                <i class="fa-solid fa-user-plus"></i> Create Account
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function switchTab(type) {
+        const tabs = document.querySelectorAll(".auth-tab");
+        const forms = document.querySelectorAll(".auth-form");
+        
+        tabs.forEach(t => t.classList.remove("active"));
+        forms.forEach(f => f.classList.remove("active"));
+        
+        if (type === 'login') {
+            tabs[0].classList.add("active");
+            document.getElementById("login-form").classList.add("active");
+        } else {
+            tabs[1].classList.add("active");
+            document.getElementById("register-form").classList.add("active");
+        }
+    }
+    
+    // Auto-detect register hash or query to switch tabs if needed
+    if (window.location.search.includes('register=true')) {
+        switchTab('register');
+    }
+</script>
+
+</body>
+</html>
