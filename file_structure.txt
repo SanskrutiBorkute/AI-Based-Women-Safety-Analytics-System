@@ -1,0 +1,183 @@
+# FILE STRUCTURE
+
+## AI-Based Women Safety Analytics System
+
+```
+SmartWomenSafetySystem/
+│
+├── data/
+│   ├── crime_data.csv
+│   └── safety_system.db
+│
+├── models/
+│   └── safety_model.pkl
+│
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   │
+│   ├── images/
+│   │
+│   └── js/
+│       └── main.js
+│
+├── templates/
+│   ├── auth.html
+│   ├── base.html
+│   └── dashboard.html
+│
+├── app.py
+├── generate_large_dataset.py
+├── init_db.py
+├── train_model.py
+├── requirements.txt
+├── README.md
+├── notes.txt
+├── file_structure.txt
+└── gallery.txt
+```
+
+---
+
+## Folder Description
+
+### data/
+
+Contains all datasets and the SQLite database used by the application.
+
+* **crime_data.csv** – Crime dataset used for AI safety prediction.
+* **safety_system.db** – SQLite database storing user accounts, trusted contacts, user settings, activity history and authentication data.
+
+---
+
+### models/
+
+Contains the trained Machine Learning model.
+
+* **safety_model.pkl** – Random Forest model used to predict the safety level (Safe, Medium Risk or High Risk).
+
+---
+
+### static/
+
+Stores all frontend resources.
+
+#### css/
+
+* **style.css** – Complete styling of the application including dashboard, authentication pages, cards, buttons, map, analytics and responsive layouts.
+
+#### images/
+
+Stores project images, icons and other visual assets.
+
+#### js/
+
+* **main.js** – Main JavaScript file containing:
+
+  * Live location tracking
+  * AI safety prediction
+  * AI risk analysis
+  * Trusted contacts
+  * Nearby support network
+  * Emergency SOS
+  * Voice SOS
+  * Safe route recommendation
+  * Notifications
+  * Analytics
+  * Dashboard interactions
+  * Authentication support
+
+---
+
+### templates/
+
+Contains all HTML templates rendered by Flask.
+
+* **auth.html** – Login and Registration page.
+* **base.html** – Base template shared across pages.
+* **dashboard.html** – Main dashboard displaying all AI-powered safety features.
+
+---
+
+## Python Files
+
+### app.py
+
+Main Flask backend application handling:
+
+* User authentication
+* Dashboard rendering
+* AI prediction
+* Database operations
+* SOS workflow
+* APIs
+* Session management
+
+### generate_large_dataset.py
+
+Generates the expanded crime dataset used for AI model training.
+
+### init_db.py
+
+Creates and initializes the SQLite database.
+
+### train_model.py
+
+Trains the Machine Learning model and generates **safety_model.pkl**.
+
+---
+
+## Documentation Files
+
+### README.md
+
+Complete project documentation including project overview, features, installation steps, deployment instructions and technology stack.
+
+### notes.txt
+
+Detailed instructions explaining how to install, run, use and deploy the project.
+
+### file_structure.txt
+
+Complete directory structure and explanation of every file and folder in the project.
+
+### gallery.txt
+
+Contains the list of project screenshots with descriptions for GitHub documentation.
+
+---
+
+## Technology Stack
+
+### Frontend
+
+* HTML5
+* CSS3
+* JavaScript
+* Leaflet.js
+* OpenStreetMap
+
+### Backend
+
+* Python
+* Flask
+
+### Machine Learning
+
+* Scikit-learn
+* Joblib
+* Pandas
+* NumPy
+
+### Database
+
+* SQLite
+
+### Deployment
+
+* GitHub
+* Render
+
+---
+
+End of File Structure
