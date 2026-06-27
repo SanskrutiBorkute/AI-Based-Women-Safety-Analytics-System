@@ -1,0 +1,315 @@
+# NOTES
+
+## Project Title
+
+**SafeHer – AI-Based Women Safety Analytics System**
+
+---
+
+## Author
+
+Sanskruti Borkute
+
+---
+
+## Project Description
+
+SafeHer is an AI-powered Women Safety Analytics System developed using Flask, Python, Machine Learning, SQLite, HTML, CSS, and JavaScript. The application helps women analyze the safety level of their current location by using live GPS location, historical crime data, machine learning predictions, nearby emergency services, and intelligent safety recommendations.
+
+The system also provides emergency features such as SOS alerts, Voice SOS, trusted contacts, nearby police stations, hospitals, AI chat assistant, analytics dashboard, and safe route recommendations.
+
+---
+
+# Software Requirements
+
+* Python 3.10 or above
+* Visual Studio Code
+* Git
+* GitHub Account
+* Render Account (for deployment)
+* Modern Web Browser (Google Chrome recommended)
+
+---
+
+# Python Libraries Required
+
+Install all required libraries using:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# How to Run the Project
+
+### Step 1
+
+Download or clone the repository.
+
+```bash
+git clone <repository-url>
+```
+
+---
+
+### Step 2
+
+Open the project folder in Visual Studio Code.
+
+---
+
+### Step 3
+
+(Optional) Create a virtual environment.
+
+Windows:
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+Mac/Linux:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+### Step 4
+
+Install all dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Step 5
+
+Run the Flask application.
+
+```bash
+python app.py
+```
+
+---
+
+### Step 6
+
+Open your browser and visit:
+
+```
+http://127.0.0.1:5000
+```
+
+The application will now be running successfully.
+
+---
+
+# How to Use the Project
+
+### 1. Register
+
+Create a new user account using the Registration page.
+
+---
+
+### 2. Login
+
+Login using your registered credentials.
+
+---
+
+### 3. Allow Location Access
+
+When prompted by the browser, allow location permission so the application can access your live GPS location.
+
+---
+
+### 4. Dashboard
+
+After login, the dashboard displays:
+
+* Current Location
+* Current Time
+* AI Safety Score
+* AI Risk Analysis
+* Safety Status
+* Live Map
+* Notifications
+
+---
+
+### 5. Trusted Contacts
+
+Add trusted contacts by entering:
+
+* Contact Name
+* Phone Number
+
+These contacts are used during emergency situations.
+
+---
+
+### 6. Safe Route Recommendation
+
+Generate the safest available route based on your current location and nearby risk analysis.
+
+---
+
+### 7. AI Chat Assistant
+
+Ask safety-related questions such as:
+
+* Is this area safe?
+* Find the nearest police station.
+* Give me safety tips.
+* Show nearby hospitals.
+
+---
+
+### 8. Voice SOS
+
+Click **Start Listening** and say:
+
+* "Help"
+* "Help Me"
+* "Emergency"
+* "SOS"
+
+The application will activate the emergency workflow.
+
+---
+
+### 9. Emergency SOS
+
+Click the **SOS** button during an emergency.
+
+The system will:
+
+* Start the emergency countdown.
+* Notify trusted contacts.
+* Record the emergency event.
+* Generate an emergency report.
+* Update the activity log.
+
+---
+
+### 10. Analytics Dashboard
+
+View AI-powered analytics including:
+
+* Safety Score
+* Risk Trends
+* Notifications
+* Recent Activities
+* AI Recommendations
+
+---
+
+# Features
+
+* Secure Login & Registration
+* User Authentication
+* Live GPS Tracking
+* Interactive OpenStreetMap
+* AI Safety Prediction
+* AI Safety Score
+* AI Risk Analysis
+* Safe Route Recommendation
+* Trusted Contacts
+* Nearby Support Network
+* Nearby Police Stations
+* Nearby Hospitals
+* Voice SOS
+* Emergency SOS
+* Notification Center
+* AI Chat Assistant
+* User Settings
+* Analytics Dashboard
+* Activity Timeline
+* Machine Learning Prediction
+* SQLite Database Integration
+* Responsive Dashboard
+* Render Deployment
+
+---
+
+# Deployment on Render
+
+1. Push the complete project to GitHub.
+
+2. Login to Render.
+
+3. Create a new **Web Service**.
+
+4. Connect your GitHub repository.
+
+5. Build Command:
+
+```bash
+pip install -r requirements.txt
+```
+
+6. Start Command:
+
+```bash
+gunicorn app:app
+```
+
+7. Click **Deploy**.
+
+8. After deployment, Render will provide a live URL for accessing the application.
+
+---
+
+# Troubleshooting
+
+### If location is not detected
+
+* Allow browser location permission.
+* Refresh the page.
+
+### If the map is not loading
+
+* Check your internet connection.
+* Refresh the browser.
+
+### If dependencies are missing
+
+Run:
+
+```bash
+pip install -r requirements.txt
+```
+
+### If the server does not start
+
+Verify that Python is installed correctly and run:
+
+```bash
+python app.py
+```
+
+---
+
+# Project Status
+
+Current Version: Final Production Version
+
+Status: Completed
+
+Deployment: GitHub + Render
+
+Machine Learning Model: Random Forest
+
+Database: SQLite
+
+---
+
+End of Notes
