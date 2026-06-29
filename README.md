@@ -1,6 +1,6 @@
 # Live Demo
 Check out the deployed version of the project here:
-https://ai-based-women-safety-analytics-system.onrender.com
+https://ai-based-women-safety-analytics-system.onrender.com/
 
 # Project Title
 # AI-Based Women Safety Analytics System
